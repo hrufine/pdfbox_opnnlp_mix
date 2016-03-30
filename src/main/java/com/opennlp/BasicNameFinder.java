@@ -1,6 +1,3 @@
-package com.opennlp;
-
-
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,6 +12,8 @@ import opennlp.tools.tokenize.SimpleTokenizer;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.Span;
+import net.sourceforge.tess4j.*;
+import net.sourceforge.tess4j.util.LoadLibs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,13 +35,38 @@ import org.apache.pdfbox.pdmodel.PDPage;
  * Hello world OpenNLP!
  * 
  */
+class TesseractExample {
+			void TesseractConversion()
+			{
+				 // System.setProperty("jna.library.path", "32".equals(System.getProperty("sun.arch.data.model")) ? "lib/win32-x86" : "lib/win32-x86-64");
+
+		        File imageFile = new File("C:/Users/ji287396/Downloads/CSA set/images/L.png");
+		        ITesseract instance = new Tesseract();  // JNA Interface Mapping
+		       //  ITesseract instance = new Tesseract1(); // JNA Direct Mapping
+		         File tessDataFolder = LoadLibs.extractTessResources("tessdata"); // Maven build bundles English data
+		         instance.setDatapath(tessDataFolder.getAbsolutePath());
+
+		        try {
+		            String result = instance.doOCR(imageFile);
+		            System.out.println(result);
+		        } catch (TesseractException e) {
+		            System.err.println(e.getMessage());
+		        }
+		    }
+				
+				
+				
+	}
+
+
+
 class ConvertPDFPagesToImages{
 	
 	  void ConvertImages()
 	  {
 		  try {
-		        String sourceDir = "C:/Users/Jishnu Surendran/Desktop/JPMC/CSA set/Lisa CSA_1.pdf"; // Pdf files are read from this folder
-		        String destinationDir = "C:/Users/Jishnu Surendran/Desktop/JPMC/CSA set/"; // converted images from pdf document are saved here
+		        String sourceDir = "C:/Users/ji287396/Downloads/CSA set/Lisa CSA_1.pdf"; // Pdf files are read from this folder
+		        String destinationDir = "C:/Users/Downloads/CSA set/images/"; // converted images from pdf document are saved here
 
 		        File sourceFile = new File(sourceDir);
 		        File destinationFile = new File(destinationDir);
@@ -143,12 +167,12 @@ class PDFRead{
 		PDDocument pd;
 		 BufferedWriter wr;
 		 try {
-	         File input = new File("D://workspace//THE_AES_CORPORATION_Proxy_Statement_14_A.pdf");  // The PDF file from where you would like to extract
+	         File input = new File("D://workspace//Proxy_Statement_.pdf");  // The PDF file from where you would like to extract
 	         File output = new File("D://workspace//SampleText.txt"); // The text file where you are going to store the extracted data
 	         pd = PDDocument.load(input);
 	         System.out.println(pd.getNumberOfPages());
 	         System.out.println(pd.isEncrypted());
-	         pd.save("THE_AES_CORPORATION_Proxy_Statement_14_A.pdf"); // Creates a copy called "CopyOfInvoice.pdf"
+	         pd.save("THE_A__14_A.pdf"); // Creates a copy called "CopyOfInvoice.pdf"
 	         PDFTextStripper stripper = new PDFTextStripper();
 	         //System.out.println(stripper.getText(pd));
 	         data=new String(stripper.getText(pd));
@@ -174,6 +198,9 @@ class PDFRead{
 public class BasicNameFinder {
     public static void main(String[] args) throws InvalidFormatException, IOException  {
        String data_to_pass=null;
+       TesseractExample TesseractTest=new  TesseractExample();
+       TesseractTest.TesseractConversion();
+       System.out.println("tess4j Conversion is done");
        ConvertPDFPagesToImages convert_images=new ConvertPDFPagesToImages();
        convert_images.ConvertImages();
        System.out.println("Image Conversion is done");
@@ -195,4 +222,3 @@ public class BasicNameFinder {
     	System.out.println("Executed both");
         }
 }
-    
